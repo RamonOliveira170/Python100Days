@@ -32,10 +32,10 @@ while len(guessed_states) < len(data):
         t.write(answer)
 
     if answer == "Exit":
-        states_to_learn = []
-        for state in all_states:
+        states_to_learn = [state for state in all_states if state not in guessed_states]
+        '''for state in all_states:
             if state not in guessed_states:
-                states_to_learn.append(state)
+                states_to_learn.append(state)'''
         st_learn = pandas.DataFrame(states_to_learn)
         st_learn.to_csv("states_to_learn.csv")
 
