@@ -1,17 +1,55 @@
 import tkinter
-
+from tkinter import messagebox
+import random
+import pyperclip
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+
+def generate_password():
+    password_input.delete(0, 999)
+
+    #nr_letters = random.randint(8, 10)
+    #nr_symbols = random.randint(2, 4)
+    #nr_numbers = random.randint(2, 4)
+
+    password_letters = [random.choice(letters) for _ in range(random.randint(8, 10))]
+    password_symbols = [random.choice(symbols) for _ in range(random.randint(2, 4))]
+    password_numbers = [random.choice(numbers) for _ in range(random.randint(2, 4))]
+
+    password_list = password_letters + password_symbols + password_numbers
+
+    random.shuffle(password_list)
+
+    password = "".join(password_list)
+    #for char in password_list:
+    #  password += char
+
+    password_input.insert(0, password)
+    pyperclip.copy(password)
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-    #website = website_input.get()
-    #email = email_input.get()
-    #password = password_input.get()
-    with open("data.txt", "a") as data_file:
-        data_file.write(f"{website_input.get()} | {email_input.get()} | {password_input.get()}\n")
-        # clear inputs
-        website_input.delete(0, 999)
-        password_input.delete(0, 999)
+    website = website_input.get()
+    email = email_input.get()
+    password = password_input.get()
+
+    if len(website) < 1 or len(email) < 1 or len(password) < 1:
+        messagebox.showinfo(title="Alert!", message="Please don't leave any fields empty!")
+    else:
+        is_ok = messagebox.askokcancel(title="User info", message=f"These are the details entered: \n"
+                                                                  f"Email: {email}\n"
+                                                                  f"Password: {password}\n"
+                                                                  f"It is ok to save?")
+        if is_ok:
+            with open("data.txt", "a") as data_file:
+                data_file.write(f"{website} | {email} | {password}\n")
+                # clear inputs
+                website_input.delete(0, 999)
+                password_input.delete(0, 999)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -44,11 +82,10 @@ password_label.grid(column=0, row=3)
 password_input = tkinter.Entry(width=34)
 password_input.grid(column=1, row=3)
 
-password_button = tkinter.Button(text="Generate Password")
+password_button = tkinter.Button(text="Generate Password", command=generate_password)
 password_button.grid(column=2, row=3, sticky="w")
 
 add_button = tkinter.Button(text="Add", width=58, command=save)
 add_button.grid(columns=1, row=4, columnspan=3)
-
 
 window.mainloop()
