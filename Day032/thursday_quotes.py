@@ -1,9 +1,7 @@
 import datetime
 import random
 import smtplib
-
-MY_EMAIL = "ramonoliveirasantos170@gmail.com"
-PASSWORD = "rjzbxfdsljzaaqgg"
+from email.message import EmailMessage
 
 now = datetime.datetime.now()
 weekday = now.weekday()
@@ -13,11 +11,13 @@ if weekday == 3:
         all_quotes = quote_file.readlines()
         selected_quote = random.choice(all_quotes)
 
-    with smtplib.SMTP("smtp.gmail.com") as connection:
+    email_msg = EmailMessage()
+    email_msg["Subject"] = "Thursday Motivation"
+    email_msg["From"] = MY_EMAIL
+    email_msg["To"] = MY_EMAIL
+    email_msg.set_content(selected_quote)
+
+    with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
         connection.starttls()
         connection.login(MY_EMAIL, PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=MY_EMAIL,
-            msg=f"Subject: Thursday Motivation\n\n"
-                f"{selected_quote}")
+        connection.send_message(email_msg)
