@@ -1,3 +1,5 @@
+APP_ID = "app_6a4f2c516553418a824c52bb"
+API_KEY = "nix_live_3lyZpoOzpY4AodHiZZp77YPT1zSgW3d1"
 import requests
 from datetime import datetime
 import os
